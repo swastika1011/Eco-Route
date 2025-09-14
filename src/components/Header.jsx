@@ -5,8 +5,9 @@ function Header() {
   return (
     <header>
       <h1>
-        {" "}
+       
         <ForestIcon />
+         {" "}
         EcoRoute
       </h1>
     </header>

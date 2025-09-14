@@ -61,7 +61,7 @@ function calculateEmissions(typeOfvehicle, distanceKm) {
   const emissionsPerKmForPM = PMemissionFactors[typeOfvehicle];
   const totalEmissionsPM = emissionsPerKmForPM * distanceKm;
   return {
-    typeOfvehicle: typeOfvehicle,
+    typeOfvehicle: typeOfvehicle,   // property name(key) = variable name(whose value is assigned to the key)
     emissiondata:{
       co2:{
         totalEmissions:totalEmissionsCO2
@@ -83,25 +83,25 @@ async function geocodeOfplace(locationName) {
     locationName
   )}`;
 
-  const response = await fetch(url);
+  const response = await fetch(url); //Sends a GET request to the API and waits for a response
 
   if (!response.ok) {
     throw new Error(`HTTP error while geocoding! Status: ${response.status}`);
   }
 
-  const data = await response.json();
-
-  if (!data.features || data.features.length === 0) {
+  const data = await response.json(); //Converts the raw response into JavaScript object format
+  // features -> property that comes from the API'S response structure
+  if (!data.features || data.features.length === 0) { //tells you how many matches were found
     alert("No Results Found")
     return null; // Return null if no results are found
   }
 
-  return data.features[0].geometry.coordinates; // [longitude, latitude]
+  return data.features[0].geometry.coordinates; // [longitude, latitude] ->> take the first match (data.features[0]) and get its coordinates.
 }
 
 async function calculateDist(start, end, mode, actualMode) {
   const apiKey = "5b3ce3597851110001cf62489f155caab8e3482d930c36a5fe187bed"; // Replace with your OpenRouteService API key
-  const url = `https://api.openrouteservice.org/v2/directions/${mode}`;
+  const url = `https://api.openrouteservice.org/v2/directions/${mode}`; //This constructs the API URL dynamically depending on the travel mode
 
   if (start[0] === end[0] && start[1] === end[1]) {
     return {
@@ -122,7 +122,7 @@ async function calculateDist(start, end, mode, actualMode) {
       "Content-Type": "application/json",
       Authorization: apiKey,
     },
-    body: JSON.stringify(requestBody),
+    body: JSON.stringify(requestBody), //converts the object into a JSON string
   });
 
   if (!response.ok) {
@@ -133,7 +133,7 @@ async function calculateDist(start, end, mode, actualMode) {
   }
 
   const data = await response.json();
-  const route = data.routes[0];
+  const route = data.routes[0]; //array of possible routes we pick the first one
 
   return {
     distance: (route.summary.distance / 1000).toFixed(2),
