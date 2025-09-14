@@ -197,21 +197,23 @@ function InputForm() {
     setShowResults(true);
 
     // Simulate loading delay
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
+    // setTimeout(() => {
+    //   setLoading(false);
+    // }, 3000);
   }
 
   
   useEffect(() => {
     const fetchData = async () => {
       if (locations.length > 0) {
+         setLoading(true);
         try {
           const geocodedLocations = await Promise.all(
             locations.map((loc) => geocodeOfplace(loc))
           );
           if (geocodedLocations.includes(null)) {
             setError("No results found"); // Set error message
+            setFinalResult([]); 
             return; // Stop further processing
           }
 
@@ -247,6 +249,9 @@ function InputForm() {
         } catch (error) {
           console.error("Error fetching geocoding or calculating results:", error);
           setError("An error occurred while fetching data."); // Handle any errors
+          setFinalResult([]); 
+        }finally {
+          setLoading(false); 
         }
       }
     };
@@ -296,6 +301,7 @@ function InputForm() {
           loading={loading}
           loadingPosition="start"
           variant="contained"
+          disabled={loading}
           color="#123524"
           sx={{
             width: "100%",
